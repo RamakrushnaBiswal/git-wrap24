@@ -186,9 +186,7 @@ const GitWrapApp = () => {
           Generate Wrap
         </button>
       </div>
-        <img src="/img/logo.png" alt="" className="absolute w-fit h-full opacity-35 top-5 -left-96 rotate-45 hover:translate-x-60 transition-all duration-200"/>
-        <img src="/img/logo.png" alt="" className="absolute w-fit h-full opacity-35 -top-5 -z-10 -right-96 -rotate-45 hover:-translate-x-60 transition-all duration-200"/>
-        {/* <img src="/img/logo.png" alt="" className="absolute w-96 h-96 top-12 "/> */}
+              {/* <img src="/img/logo.png" alt="" className="absolute w-96 h-96 top-12 "/> */}
       {loading && (
         <button className="btn absolute">
           <span className="loading loading-spinner"></span>
