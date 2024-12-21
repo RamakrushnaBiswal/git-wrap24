@@ -1,28 +1,12 @@
 export default function Footer() {
   return (
-    <footer className="footer footer-center bg-primary text-primary-content p-4 flex justify-between">
+    <footer className="text-center py-4 text-sm text-gray-600 dark:text-gray-400">
       <aside className="grid grid-flow-col">
-        <h3 className="font-bold text-6xl font-ache hover:text-white transition ease-in duration-200">
-          GitWrap <sup className="text-4xl">24</sup>
-        </h3>
         <p className="font-normal">
           Created by{" "}
-          <a href="https://github.com/RamakrushnaBiswal" target="_blank" className=" underline underline-offset-2 ">Ramakrushna Biswal</a>
+          <a href="https://github.com/RamakrushnaBiswal" target="_blank" className="text-amber-400">Me :)</a>
         </p>
       </aside>
-      <nav>
-        <div className="grid grid-flow-col gap-4">
-          <a href="https://github.com/RamakrushnaBiswal" target="_blank">
-            GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/ramakrushna-biswal/" target="_blank">
-            linkedin
-          </a>
-          <a href="https://www.instagram.com/ram__mzqp/" target="_blank">
-            Instagram
-          </a>
-        </div>
-      </nav>
     </footer>
   );
 }

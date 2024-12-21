@@ -11,8 +11,9 @@ const GitWrapApp = () => {
   const [favLang, setfavLang] = useState(null);
   const [ageInYears, setAgeInYears] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showError, setShowError] = useState(false);
+
   const canvasRef = useRef(null);
-  
   const fetchGitHubData = async () => {
     setLoading(true);
     const octokit = new Octokit({
@@ -66,9 +67,14 @@ const GitWrapApp = () => {
       console.log(data);
     } catch (error) {
       console.error("Error fetching GitHub data:", error);
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 1500);
       setUserData(null);
     } finally {
       setLoading(false);
+      setUsername("")
     }
   };
 
@@ -134,7 +140,11 @@ const GitWrapApp = () => {
           };
   
           profilePic.onerror = () => {
-            console.error("Error loading the profile picture with CORS.");
+            // console.error("Error loading the profile picture with CORS.");
+            setShowError(true);
+            setTimeout(() => {
+              setShowError(false);
+            }, 1500);
           };
         }
       };
@@ -149,7 +159,11 @@ const GitWrapApp = () => {
         if (blob) {
           saveAs(blob, `${username}_gitwrap.png`);
         } else {
-          console.error("Canvas could not be converted to blob.");
+          // console.error("Canvas could not be converted to blob.");
+          setShowError(true);
+          setTimeout(() => {
+            setShowError(false);
+          }, 1500);
         }
       });
     }
@@ -157,25 +171,47 @@ const GitWrapApp = () => {
   
 
   return (
-    <div className="app-container p-20 bg-dot-10-s-2-blue-950" >
-      <div className="flex flex-col items-center h-[50vh]">
+    <div className="app-container p-20 cursor-myo" >
+      
+      <div className="flex flex-col items-center h-[55vh]">
+
         <input
           type="text"
           placeholder="Enter GitHub Username"
           className="input input-bordered input-accent w-full max-w-xs"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {setUsername(e.target.value);setShowError(false);}}
         />
         <button onClick={fetchGitHubData} className="btn glass mt-2">
           Generate Wrap
         </button>
       </div>
-
+        <img src="/img/logo.png" alt="" className="absolute w-fit h-full opacity-35 top-5 -left-96 rotate-45 hover:translate-x-60 transition-all duration-200"/>
+        <img src="/img/logo.png" alt="" className="absolute w-fit h-full opacity-35 -top-5 -right-96 -rotate-45 hover:-translate-x-60 transition-all duration-200"/>
+        {/* <img src="/img/logo.png" alt="" className="absolute w-96 h-96 top-12 "/> */}
       {loading && (
-        <button className="btn">
+        <button className="btn absolute">
           <span className="loading loading-spinner"></span>
           Something Cooked Up 🗽
         </button>
+      )}
+        {showError && (
+        <span role="alert" className="alert alert-error mt-2 w-60 absolute">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Kya kar raha hai🥲!!</span>
+        </span>
       )}
       {userData && (
         <dialog id="modal" className="modal modal-bottom sm:modal-middle">

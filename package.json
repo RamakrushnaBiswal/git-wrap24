@@ -12,6 +12,7 @@
   "dependencies": {
     "@nauverse/tailwind-dot-grid-backgrounds": "^1.2.13",
     "autoprefixer": "^10.4.20",
+    "cursor-effects": "^1.0.17",
     "dotenv": "^16.4.7",
     "file-saver": "^2.0.5",
     "octokit": "^4.0.2",
