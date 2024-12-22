@@ -11,11 +11,27 @@ const GitWrapApp = () => {
   const [favLang, setfavLang] = useState(null);
   const [ageInYears, setAgeInYears] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const canvasRef = useRef(null);
   const fetchGitHubData = async () => {
-    setLoading(true);
+      if (!username.trim()) {
+        setErrorMessage("Username cannot be empty.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 1500);
+        return;
+      }
+  
+      if (username.length > 39) {
+        setErrorMessage("Username exceeds the maximum allowed length (39 characters).");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 1500);
+        return;
+      }
+      
+      setLoading(true);
     const octokit = new Octokit({
       auth: import.meta.env.VITE_GITHUB_TOKEN,
     });
@@ -64,12 +80,16 @@ const GitWrapApp = () => {
       setMostStarredRepo(mostStarredRepo);
       setfavLang(mostUsedLanguage[0]);
       setAgeInYears(ageInYears);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
-      console.error("Error fetching GitHub data:", error);
-      setShowError(true);
+      // console.error("Error fetching GitHub data:", error);
+      if (error.status === 404) {
+        setErrorMessage("GitHub username not found. Please enter a valid username.");
+      } else {
+        setErrorMessage("An error occurred while fetching data. Please try again.");
+      }
       setTimeout(() => {
-        setShowError(false);
+        setErrorMessage(false);
       }, 1500);
       setUserData(null);
     } finally {
@@ -141,9 +161,9 @@ const GitWrapApp = () => {
   
           profilePic.onerror = () => {
             // console.error("Error loading the profile picture with CORS.");
-            setShowError(true);
+            setErrorMessage("Error loading the profile picture with CORS.");
             setTimeout(() => {
-              setShowError(false);
+              setErrorMessage("");
             }, 1500);
           };
         }
@@ -160,9 +180,9 @@ const GitWrapApp = () => {
           saveAs(blob, `${username}_gitwrap.png`);
         } else {
           // console.error("Canvas could not be converted to blob.");
-          setShowError(true);
+          setErrorMessage("Canvas could not be converted to blob.");
           setTimeout(() => {
-            setShowError(false);
+            setErrorMessage("");
           }, 1500);
         }
       });
@@ -173,16 +193,16 @@ const GitWrapApp = () => {
   return (
     <div className="app-container p-20 cursor-myo" >
       
-      <div className="flex flex-col items-center h-[55vh]">
-
+      <div className="flex flex-col items-center h-[55vh]  w-full">
+        <img src="./img/github.png" alt="github" className="w-full lg:w-1/6" />
         <input
           type="text"
           placeholder="Enter GitHub Username"
-          className="input input-bordered input-accent w-full max-w-xs"
+          className="input input-bordered input-accent w-full lg:w-96 text-[12px] lg:text-[16px] mt-2" 
           value={username}
-          onChange={(e) => {setUsername(e.target.value);setShowError(false);}}
+          onChange={(e) => {setUsername(e.target.value); setErrorMessage("");}}
         />
-        <button onClick={fetchGitHubData} className="btn glass mt-2">
+        <button onClick={fetchGitHubData} className="btn glass mt-2 text-[12px] lg:text-[16px]">
           Generate Wrap
         </button>
       </div>
@@ -190,11 +210,11 @@ const GitWrapApp = () => {
       {loading && (
         <button className="btn absolute">
           <span className="loading loading-spinner"></span>
-          Something Cooked Up 🗽
+          Loading...
         </button>
       )}
-        {showError && (
-        <span role="alert" className="alert alert-error mt-2 w-60 absolute">
+        {errorMessage && (
+        <span role="alert" className="alert alert-error mt-2 w-1/2 lg:w-auto text-center flex absolute">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 shrink-0 stroke-current"
@@ -208,7 +228,7 @@ const GitWrapApp = () => {
               d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Kya kar raha hai🥲!!</span>
+          <span className="text-[10px] lg:text-[14px]">{errorMessage}</span>
         </span>
       )}
       {userData && (
